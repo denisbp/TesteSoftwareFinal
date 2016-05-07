@@ -5,16 +5,21 @@ import static org.junit.Assert.assertEquals;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import br.com.uniriter.teste.common.TestCommons;
-import br.com.uniriter.teste.common.TestUtils;
+import br.com.uniritter.teste.MenuPage;
+import br.com.uniritter.teste.common.TestUtils;
+import br.com.uniritter.teste.exception.NoSuchMenuException;
 
 public class TestBarraMenu extends TestCommons {
 
+	private MenuPage menuPage;
+	
 	@Before
 	public void setUp() throws Exception {
 		TestUtils.getDriver().get(TestUtils.URL_PAMPA);
+		menuPage = new MenuPage();
+		
 	}
 
 	@AfterClass
@@ -24,34 +29,36 @@ public class TestBarraMenu extends TestCommons {
 	
 	@Test
 	public void testClickMenuQuemSomos() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.quem_somos > a > img")).click();
-		assertEquals("http://www.pampaeolica.com.br/quem-somos.php", TestUtils.getDriver().getCurrentUrl());
+		menuPage.selectMenu(MenuPage.QUEM_SOMOS);
+		assertEquals(MenuPage.QUEM_SOMOS_URL, TestUtils.getDriver().getCurrentUrl());
 	}
 
 	@Test
 	public void testClickMenuPortfolio() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.portfolio > a > img")).click();
-		assertEquals("http://www.pampaeolica.com.br/portfolio.php", TestUtils.getDriver().getCurrentUrl());
+		menuPage.selectMenu(MenuPage.PORTFOLIO);
+		assertEquals(MenuPage.PORTFOLIO_URL, TestUtils.getDriver().getCurrentUrl());
 	}
 
 	@Test
 	public void testClickMenuProprietariosRurais() throws Exception {
-		TestUtils.getDriver().findElement(By.xpath("//ul[@id='menu']/li[3]/a")).click();
-		assertEquals("http://www.pampaeolica.com.br/proprietarios-rurais.php", TestUtils.getDriver().getCurrentUrl());
+		menuPage.selectMenu(MenuPage.PROPRIETARIOS_RURAIS);
+		assertEquals(MenuPage.PROPRIETARIOS_RURAIS_URL, TestUtils.getDriver().getCurrentUrl());
 	}
 
 	@Test
 	public void testClickMenuContato() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.contato > a > img")).click();
-		assertEquals("http://www.pampaeolica.com.br/contato.php", TestUtils.getDriver().getCurrentUrl());
+		menuPage.selectMenu(MenuPage.CONTATO);
+		assertEquals(MenuPage.CONTATO_URL, TestUtils.getDriver().getCurrentUrl());
 	}
 
 	@Test
 	public void testMenuProprietariosRuraisClickQueroFazerParte() throws Exception {
-		TestUtils.getDriver().findElement(
-				By.xpath("//img[contains(@src,'http://www.pampaeolica.com.br/imagens/m-proprietarios-rurais.jpg')]"))
-				.click();
-		TestUtils.getDriver().findElement(By.cssSelector("#box_1 > a > img")).click();
-		assertEquals("http://www.pampaeolica.com.br/quero-fazer-parte.php", TestUtils.getDriver().getCurrentUrl());
+		menuPage.selectFazerParte();
+		assertEquals(MenuPage.FAZER_PARTE_URL, TestUtils.getDriver().getCurrentUrl());
+	}
+	
+	@Test(expected=NoSuchMenuException.class)
+	public void testClickMenuInvalido() throws Exception {
+		menuPage.selectMenu(5);
 	}
 }

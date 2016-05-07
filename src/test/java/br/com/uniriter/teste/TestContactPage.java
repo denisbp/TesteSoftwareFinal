@@ -1,21 +1,27 @@
 package br.com.uniriter.teste;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import br.com.uniriter.teste.common.TestCommons;
-import br.com.uniriter.teste.common.TestUtils;
+import br.com.uniritter.teste.ContactPage;
+import br.com.uniritter.teste.MenuPage;
+import br.com.uniritter.teste.common.TestUtils;
 
 public class TestContactPage extends TestCommons {
+
+	private MenuPage menuPage;
+	private ContactPage contactPage;
 
 	@Before
 	public void setUp() throws Exception {
 		TestUtils.getDriver().get(TestUtils.URL_PAMPA);
+		menuPage = new MenuPage();
+		menuPage.selectMenu(MenuPage.CONTATO);
+		contactPage = new ContactPage();
 	}
 
 	@AfterClass
@@ -25,72 +31,54 @@ public class TestContactPage extends TestCommons {
 
 	@Test
 	public void testSendContactAllEmptyFields() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.contato > a > img")).click();
-		TestUtils.getDriver().findElement(By.id("btn_enviar")).click();
-		assertEquals("Informe o nome", TestUtils.getDriver().findElement(By.cssSelector("label.error")).getText());
-		assertEquals("Informe sua localidade",
-				TestUtils.getDriver().findElement(By.xpath("//table[@id='tbl_proprietarios']/tbody/tr[2]/td/label")).getText());
-		assertEquals("Informe seu E-mail",
-				TestUtils.getDriver().findElement(By.xpath("//table[@id='tbl_proprietarios']/tbody/tr[3]/td/label")).getText());
-		assertEquals("Digite uma mensagem",
-				TestUtils.getDriver().findElement(By.xpath("//table[@id='tbl_proprietarios']/tbody/tr[4]/td/label")).getText());
+		contactPage.sendMessage();
+		assertEquals(ContactPage.ERROR_MESSAGE_NAME, contactPage.getErrorName());
+		assertEquals(ContactPage.ERROR_MESSAGE_LOCATION, contactPage.getErrorLocation());
+		assertEquals(ContactPage.ERROR_MESSAGE_EMAIL, contactPage.getErrorEmail());
+		assertEquals(ContactPage.ERROR_MESSAGE_MESSAGE, contactPage.getErrorMessage());
 	}
 
+	/*
 	@Test
 	public void testSendContactEmptyFieldEmail() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.contato > a > img")).click();
-		TestUtils.getDriver().findElement(By.id("txt_nome")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_nome")).sendKeys("Nome de Teste");
-		TestUtils.getDriver().findElement(By.id("txt_localidade_v")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_localidade_v")).sendKeys("Localidade Teste");
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).clear();
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).sendKeys("Mensagem de Teste, por favor, ignore.");
-		TestUtils.getDriver().findElement(By.id("btn_enviar")).click();
-		assertEquals("Informe seu E-mail", TestUtils.getDriver().findElement(By.cssSelector("label.error")).getText());
+		contactPage.setName("Nome de Teste");
+		contactPage.setLocation("Localidade Teste");
+		contactPage.setMessage("Mensagem de Teste, por favor, ignore.");
+		contactPage.sendMessage();
+		assertEquals(ContactPage.ERROR_MESSAGE_EMAIL, contactPage.getErrorEmail());
 	}
+	*/
 
 	@Test
 	public void testSendContactEmptyFieldLocation() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.contato > a")).click();
-		TestUtils.getDriver().findElement(By.id("txt_nome")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_nome")).sendKeys("Nome de Teste");
-		TestUtils.getDriver().findElement(By.id("txt_email")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_email")).sendKeys("email@testemail.tst");
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).clear();
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).sendKeys("Mensagem de Teste, por favor, ignore.");
-		TestUtils.getDriver().findElement(By.id("btn_enviar")).click();
-		assertEquals("Informe sua localidade", TestUtils.getDriver().findElement(By.cssSelector("label.error")).getText());
+		contactPage.setName("Nome de Teste");
+		contactPage.setEmail("email@testemail.tst");
+		contactPage.setMessage("Mensagem de Teste, por favor, ignore.");
+		contactPage.sendMessage();
+		assertEquals(ContactPage.ERROR_MESSAGE_LOCATION, contactPage.getErrorLocation());
 	}
 
 	@Test
 	public void testSendContactEmptyFieldName() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.contato > a > img")).click();
-		TestUtils.getDriver().findElement(By.id("txt_localidade_v")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_localidade_v")).sendKeys("Localidade Teste");
-		TestUtils.getDriver().findElement(By.id("txt_email")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_email")).sendKeys("email@testemail.tst");
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).clear();
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).sendKeys("Mensagem de Teste, por favor, ignore.");
-		TestUtils.getDriver().findElement(By.id("btn_enviar")).click();
-		assertEquals("Informe o nome", TestUtils.getDriver().findElement(By.cssSelector("label.error")).getText());
+		contactPage.setLocation("Localidade Teste");
+		contactPage.setEmail("email@testemail.tst");
+		contactPage.setMessage("Mensagem de Teste, por favor, ignore.");
+		contactPage.sendMessage();
+		assertEquals(ContactPage.ERROR_MESSAGE_NAME, contactPage.getErrorName());
 	}
 
 	@Test
 	public void testSendContactSuccess() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.contato > a > img")).click();
-		TestUtils.getDriver().findElement(By.id("txt_nome")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_nome")).sendKeys("Nome de Teste");
-		TestUtils.getDriver().findElement(By.id("txt_localidade_v")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_localidade_v")).sendKeys("Localidade Teste");
-		TestUtils.getDriver().findElement(By.id("txt_email")).clear();
-		TestUtils.getDriver().findElement(By.id("txt_email")).sendKeys("email@testemail.tst");
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).clear();
-		TestUtils.getDriver().findElement(By.id("txta_mensagem")).sendKeys("Mensagem de Teste, por favor, ignore.");
-		TestUtils.getDriver().findElement(By.id("btn_enviar")).click();
-		assertEquals("", TestUtils.getDriver().findElement(By.id("txt_nome")).getText());
-		assertEquals("", TestUtils.getDriver().findElement(By.id("txt_localidade_v")).getText());
-		assertEquals("", TestUtils.getDriver().findElement(By.id("txt_email")).getText());
-		assertEquals("", TestUtils.getDriver().findElement(By.id("txta_mensagem")).getText());
-		assertFalse(isElementPresent(By.cssSelector("label.error")));
+		contactPage.setName("Nome de Teste");
+		contactPage.setLocation("Localidade Teste");
+		contactPage.setEmail("email@testemail.tst");
+		contactPage.setMessage("Mensagem de Teste, por favor, ignore.");
+		contactPage.sendMessage();
+		contactPage = new ContactPage(); //inicializando elementos apos o refresh
+		assertEquals("", contactPage.getName());
+		assertEquals("", contactPage.getLocation());
+		assertEquals("", contactPage.getEmail());
+		assertEquals("", contactPage.getMessage());
+		assertEquals("", contactPage.getErrorName());
 	}
 }

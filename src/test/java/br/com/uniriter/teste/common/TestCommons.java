@@ -5,6 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 
+import br.com.uniritter.teste.common.TestUtils;
+
 public class TestCommons {
 	private boolean acceptNextAlert = true;
 

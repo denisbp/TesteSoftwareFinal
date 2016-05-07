@@ -5,16 +5,23 @@ import static org.junit.Assert.assertEquals;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
 
 import br.com.uniriter.teste.common.TestCommons;
-import br.com.uniriter.teste.common.TestUtils;
+import br.com.uniritter.teste.MenuPage;
+import br.com.uniritter.teste.MainPage;
+import br.com.uniritter.teste.common.TestUtils;
+import br.com.uniritter.teste.exception.NoSuchLanguageException;
 
 public class TestMainPage extends TestCommons {
+	
+	private MainPage mainPage;
+	private MenuPage menuPage;
 
 	@Before
 	public void setUp() throws Exception {
 		TestUtils.getDriver().get(TestUtils.URL_PAMPA);
+		mainPage = new MainPage();
+		menuPage = new MenuPage();
 	}
 
 	@AfterClass
@@ -24,20 +31,26 @@ public class TestMainPage extends TestCommons {
 
 	@Test
 	public void testClickLogoHomePage() throws Exception {
-		TestUtils.getDriver().findElement(By.cssSelector("li.quem_somos > a > img")).click();
-		TestUtils.getDriver().findElement(By.cssSelector("img[alt=\"Renobrax - Energias Renováveis\"]")).click();
-		assertEquals("http://www.pampaeolica.com.br/", TestUtils.getDriver().getCurrentUrl());
+		menuPage.selectMenu(MenuPage.QUEM_SOMOS);
+		mainPage = new MainPage();
+		mainPage.clickLogo();
+		assertEquals(MainPage.HOME_PAGE_URL, TestUtils.getDriver().getCurrentUrl());
 	}
 
 	@Test
 	public void testChangeLanguageEnglish() throws Exception {
-		TestUtils.getDriver().findElement(By.id("traducao_1")).click();
-		assertEquals("http://www.pampaeolica.com.br/en/", TestUtils.getDriver().getCurrentUrl());
+		mainPage.changeLanguage(MainPage.ENGLISH);
+		assertEquals(MainPage.HOME_PAGE_ENGLISH_URL, TestUtils.getDriver().getCurrentUrl());
 	}
 
 	@Test
 	public void testChangeLanguageSpanish() throws Exception {
-		TestUtils.getDriver().findElement(By.id("traducao_2")).click();
-		assertEquals("http://www.pampaeolica.com.br/es/", TestUtils.getDriver().getCurrentUrl());
+		mainPage.changeLanguage(MainPage.SPANISH);
+		assertEquals(MainPage.HOME_PAGE_SPANISH_URL, TestUtils.getDriver().getCurrentUrl());
+	}
+	
+	@Test(expected=NoSuchLanguageException.class)
+	public void testChangeLanguageInvalidOption() throws Exception {
+		mainPage.changeLanguage(3);
 	}
 }

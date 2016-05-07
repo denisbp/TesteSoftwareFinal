@@ -1,4 +1,4 @@
-package br.com.uniriter.teste.common;
+package br.com.uniritter.teste.common;
 
 import java.util.concurrent.TimeUnit;
 
