@@ -21,7 +21,7 @@ public class MainPage extends PageCommon {
 	public static final int SPANISH = 2;
 	
 	public MainPage() {
-		logoHomePage = TestUtils.getDriver().findElement(By.cssSelector("img[alt=\"Renobrax - Energias Renováveis\"]"));
+		logoHomePage = TestUtils.getDriver().findElement(By.cssSelector("a[id=\"logo\"]"));
 		englishFlag = TestUtils.getDriver().findElement(By.id("traducao_1"));
 		spanishFlag = TestUtils.getDriver().findElement(By.id("traducao_2"));
 	}
